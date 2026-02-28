@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 typedef struct {
     char pid[10];
@@ -47,7 +46,7 @@ int main() {
         current_time = completion;
     }
 
-    /* Sort back by original input order for output */
+    /* Restore original input order for output */
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].original_index > p[j + 1].original_index) {

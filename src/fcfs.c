@@ -21,7 +21,7 @@ int main() {
         p[i].original_index = i;
     }
 
-    // Sort by arrival time
+    // Sort by arrival time (bubble sort)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j+1].arrival) {

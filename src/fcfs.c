@@ -15,22 +15,23 @@ int main() {
 
     Process p[n];
 
+    // Read process details
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time 
+    // Sort processes by arrival time (FCFS)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j+1].arrival) {
+            if (p[j].arrival > p[j + 1].arrival) {
                 Process temp = p[j];
-                p[j] = p[j+1];
-                p[j+1] = temp;
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
             }
         }
     }
 
-    // Compute waiting & turnaround time
+    // Compute waiting time and turnaround time
     int current_time = 0;
     for (int i = 0; i < n; i++) {
         if (current_time < p[i].arrival) {
@@ -48,7 +49,7 @@ int main() {
         total_tat += p[i].turnaround;
     }
 
-    // Print output
+    // Print output EXACTLY as required
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
         printf("%s %d\n", p[i].pid, p[i].waiting);

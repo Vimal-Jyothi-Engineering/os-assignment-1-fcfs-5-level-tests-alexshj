@@ -7,6 +7,7 @@ typedef struct {
     int burst;
     int waiting;
     int turnaround;
+    int index;   // original input position
 } Process;
 
 int main() {
@@ -17,9 +18,10 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+        p[i].index = i;  // store original order
     }
 
-    // Sort processes by arrival time (FCFS)
+    // Sort by arrival time (stable FCFS)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j + 1].arrival) {
@@ -30,37 +32,38 @@ int main() {
         }
     }
 
-    // Calculate waiting time and turnaround time
     int current_time = 0;
 
     for (int i = 0; i < n; i++) {
         if (current_time < p[i].arrival) {
-            current_time = p[i].arrival;  // CPU idle
+            current_time = p[i].arrival;
         }
 
         current_time += p[i].burst;
 
-        int completion_time = current_time;
-        p[i].turnaround = completion_time - p[i].arrival; // TAT
-        p[i].waiting = p[i].turnaround - p[i].burst;       // WT
+        int completion = current_time;
+        p[i].turnaround = completion - p[i].arrival;
+        p[i].waiting = p[i].turnaround - p[i].burst;
     }
 
-    // Calculate averages
-    double total_wt = 0, total_tat = 0;
+    // Restore original order
+    Process result[n];
     for (int i = 0; i < n; i++) {
-        total_wt += p[i].waiting;
-        total_tat += p[i].turnaround;
+        result[p[i].index] = p[i];
     }
 
-    // Output results
+    double total_wt = 0, total_tat = 0;
+
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
-        printf("%s %d\n", p[i].pid, p[i].waiting);
+        printf("%s %d\n", result[i].pid, result[i].waiting);
+        total_wt += result[i].waiting;
     }
 
     printf("Turnaround Time:\n");
     for (int i = 0; i < n; i++) {
-        printf("%s %d\n", p[i].pid, p[i].turnaround);
+        printf("%s %d\n", result[i].pid, result[i].turnaround);
+        total_tat += result[i].turnaround;
     }
 
     printf("Average Waiting Time: %.2f\n", total_wt / n);

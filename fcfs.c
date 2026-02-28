@@ -36,9 +36,9 @@ int main() {
         if (current_time < p[i].arrival) {
             current_time = p[i].arrival;
         }
-        p[i].waiting = current_time - p[i].arrival;
-        p[i].turnaround = p[i].waiting + p[i].burst;
         current_time += p[i].burst;
+        p[i].turnaround = current_time;         // TAT = completion time
+        p[i].waiting = p[i].turnaround - p[i].burst; // WT = TAT - burst
     }
 
     // Compute averages
@@ -48,7 +48,7 @@ int main() {
         total_tat += p[i].turnaround;
     }
 
-    // Print in sorted (arrival) order
+    // Print in sorted order
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
         printf("%s %d\n", p[i].pid, p[i].waiting);

@@ -19,7 +19,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (FCFS order)
+    // Sort by arrival time (FCFS)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j + 1].arrival) {
@@ -33,15 +33,16 @@ int main() {
     int current_time = 0;
 
     for (int i = 0; i < n; i++) {
+        // CPU idle handling
         if (current_time < p[i].arrival) {
-            current_time = p[i].arrival; // CPU idle
+            current_time = p[i].arrival;
         }
 
-        current_time += p[i].burst;
+        // Start time is current_time
+        p[i].waiting = current_time - p[i].arrival;
+        p[i].turnaround = p[i].waiting + p[i].burst;
 
-        int completion_time = current_time;
-        p[i].turnaround = completion_time - p[i].arrival;
-        p[i].waiting = p[i].turnaround - p[i].burst;
+        current_time += p[i].burst;
     }
 
     double total_wt = 0, total_tat = 0;

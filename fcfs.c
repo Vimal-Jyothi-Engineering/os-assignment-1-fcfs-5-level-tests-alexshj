@@ -7,6 +7,7 @@ typedef struct {
     int burst;
     int waiting;
     int turnaround;
+    int index;   // original input order
 } Process;
 
 int main() {
@@ -14,35 +15,42 @@ int main() {
     scanf("%d", &n);
 
     Process p[n];
+    Process sorted[n];
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+        p[i].index = i;
+        sorted[i] = p[i];   // copy for sorting
     }
 
-    // Sort by arrival time (FCFS)
+    // Sort COPY by arrival time (FCFS execution order)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j + 1].arrival) {
-                Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
+            if (sorted[j].arrival > sorted[j + 1].arrival) {
+                Process temp = sorted[j];
+                sorted[j] = sorted[j + 1];
+                sorted[j + 1] = temp;
             }
         }
     }
 
     int current_time = 0;
 
+    // FCFS calculation
     for (int i = 0; i < n; i++) {
-        // CPU idle handling
-        if (current_time < p[i].arrival) {
-            current_time = p[i].arrival;
-        }
+        if (current_time < sorted[i].arrival)
+            current_time = sorted[i].arrival;
 
-        // Start time is current_time
-        p[i].waiting = current_time - p[i].arrival;
-        p[i].turnaround = p[i].waiting + p[i].burst;
+        sorted[i].waiting = current_time - sorted[i].arrival;
+        sorted[i].turnaround = sorted[i].waiting + sorted[i].burst;
 
-        current_time += p[i].burst;
+        current_time += sorted[i].burst;
+    }
+
+    // Copy results back to ORIGINAL input order
+    for (int i = 0; i < n; i++) {
+        p[sorted[i].index].waiting = sorted[i].waiting;
+        p[sorted[i].index].turnaround = sorted[i].turnaround;
     }
 
     double total_wt = 0, total_tat = 0;

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 typedef struct {
     char pid[10];
@@ -6,6 +7,7 @@ typedef struct {
     int burst;
     int waiting;
     int turnaround;
+    int original_index;
 } Process;
 
 int main() {
@@ -16,6 +18,7 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+        p[i].original_index = i;
     }
 
     /* Stable FCFS sort by arrival time */
@@ -42,6 +45,17 @@ int main() {
         p[i].turnaround = completion - p[i].arrival;
 
         current_time = completion;
+    }
+
+    /* Sort back by original input order for output */
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (p[j].original_index > p[j + 1].original_index) {
+                Process temp = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
+            }
+        }
     }
 
     double total_wt = 0, total_tat = 0;

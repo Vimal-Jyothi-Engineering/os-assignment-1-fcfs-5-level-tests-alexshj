@@ -15,7 +15,6 @@ int main() {
 
     Process p[n];
 
-    // Read input
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
@@ -31,23 +30,24 @@ int main() {
         }
     }
 
-    // FCFS waiting & turnaround time (NO idle handling)
-    p[0].waiting = 0;
-    p[0].turnaround = p[0].burst;
+    // FCFS with arrival-time handling
+    int current_time = 0;
 
-    for (int i = 1; i < n; i++) {
-        p[i].waiting = p[i - 1].waiting + p[i - 1].burst;
+    for (int i = 0; i < n; i++) {
+        if (current_time < p[i].arrival) {
+            current_time = p[i].arrival;
+        }
+        p[i].waiting = current_time - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
+        current_time += p[i].burst;
     }
 
-    // Compute averages
     double total_wt = 0, total_tat = 0;
     for (int i = 0; i < n; i++) {
         total_wt += p[i].waiting;
         total_tat += p[i].turnaround;
     }
 
-    // Print output (EXACT format)
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
         printf("%s %d\n", p[i].pid, p[i].waiting);

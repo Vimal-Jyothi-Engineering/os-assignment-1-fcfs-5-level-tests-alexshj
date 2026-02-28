@@ -7,7 +7,6 @@ typedef struct {
     int burst;
     int waiting;
     int turnaround;
-    int original_index;
 } Process;
 
 int main() {
@@ -18,10 +17,9 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
-        p[i].original_index = i;
     }
 
-    // Sort by arrival time (bubble sort)
+    // Sort by arrival time
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j+1].arrival) {
@@ -43,17 +41,6 @@ int main() {
         current_time += p[i].burst;
     }
 
-    // Restore original input order for printing
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].original_index > p[j+1].original_index) {
-                Process temp = p[j];
-                p[j] = p[j+1];
-                p[j+1] = temp;
-            }
-        }
-    }
-
     // Compute averages
     double total_wt = 0, total_tat = 0;
     for (int i = 0; i < n; i++) {
@@ -61,7 +48,7 @@ int main() {
         total_tat += p[i].turnaround;
     }
 
-    // Print EXACTLY in required format
+    // Print in sorted (arrival) order
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
         printf("%s %d\n", p[i].pid, p[i].waiting);

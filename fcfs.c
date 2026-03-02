@@ -20,10 +20,11 @@ int main() {
         p[i].original_index = i;
     }
 
-    /* Stable FCFS sort by arrival time */
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j + 1].arrival) {
+            if (p[j].arrival > p[j + 1].arrival ||
+               (p[j].arrival == p[j + 1].arrival &&
+                p[j].original_index > p[j + 1].original_index)) {
                 Process temp = p[j];
                 p[j] = p[j + 1];
                 p[j + 1] = temp;
@@ -46,7 +47,6 @@ int main() {
         current_time = completion;
     }
 
-    /* Restore original input order for output */
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].original_index > p[j + 1].original_index) {

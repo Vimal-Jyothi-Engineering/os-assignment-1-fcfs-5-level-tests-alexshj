@@ -47,16 +47,6 @@ int main() {
         current_time = completion;
     }
 
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].original_index > p[j + 1].original_index) {
-                Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
-            }
-        }
-    }
-
     double total_wt = 0, total_tat = 0;
 
     printf("Waiting Time:\n");
